@@ -8,45 +8,27 @@ cmake_minimum_required(VERSION 3.15...3.27)
 
 option(BUILD_PYTHON_BINDING "Build Python Binding" off)
 
-
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 17)
 
-# Importing libraries. booster_robotics_sdk is the entry point you can link against, other
-# libraries and include will be added as dependencies
-add_library(booster_robotics_sdk STATIC IMPORTED)
-set_target_properties(booster_robotics_sdk PROPERTIES
-  IMPORTED_LOCATION
-  ${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libbooster_robotics_sdk.a
+# Booster libraries that should be linked
+set(BOOSTER_LIBRARIES
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libbooster_robotics_sdk.a
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfastcdr.so
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfastrtps.so
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfoonathan_memory-0.7.3.a
+    PARENT_SCOPE
 )
 
-add_library(libfastcdr SHARED IMPORTED)
-set_target_properties(libfastcdr PROPERTIES
-  IMPORTED_LOCATION
-  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfastcdr.so
-)
-
-add_library(libfastrtps SHARED IMPORTED)
-set_target_properties(libfastrtps PROPERTIES
-  IMPORTED_LOCATION
-  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfastrtps.so
-)
-
-add_library(libfoonathan_memory-0.7.3 STATIC IMPORTED)
-set_target_properties(libfoonathan_memory-0.7.3 PROPERTIES
-  IMPORTED_LOCATION
-  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfoonathan_memory-0.7.3.a
-)
-
-target_link_libraries(booster_robotics_sdk INTERFACE libfastcdr libfastrtps libfoonathan_memory-0.7.3)
-
-target_include_directories(booster_robotics_sdk PUBLIC INTERFACE
+# Booster include
+set(BOOSTER_INCLUDES
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/include
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/third_party/include
+  PARENT_SCOPE
 )
 
-add_executable(b1_loco_example_client example/high_level/b1_loco_example_client.cpp)
-target_link_libraries(b1_loco_example_client booster_robotics_sdk)
+# add_executable(b1_loco_example_client example/high_level/b1_loco_example_client.cpp)
+# target_link_libraries(b1_loco_example_client booster_robotics_sdk)
 
 # add_executable(b1_arm_sdk_example_client example/high_level/b1_arm_sdk_example.cpp)
 # add_executable(b1_7dof_arm_sdk_example_client example/high_level/b1_7dof_arm_sdk_example.cpp)
