@@ -10,23 +10,53 @@ option(BUILD_PYTHON_BINDING "Build Python Binding" off)
 
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 set(CMAKE_CXX_STANDARD 17)
 
-link_libraries(booster_robotics_sdk.a fastrtps fastcdr libfoonathan_memory-0.7.3.a)
+# Importing libraries. booster_robotics_sdk is the entry point you can link against, other
+# libraries and include will be added as dependencies
+add_library(booster_robotics_sdk STATIC IMPORTED)
+set_target_properties(booster_robotics_sdk PROPERTIES
+  IMPORTED_LOCATION
+  ${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libbooster_robotics_sdk.a
+)
+
+add_library(libfastcdr SHARED IMPORTED)
+set_target_properties(libfastcdr PROPERTIES
+  IMPORTED_LOCATION
+  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfastcdr.so
+)
+
+add_library(libfastrtps SHARED IMPORTED)
+set_target_properties(libfastrtps PROPERTIES
+  IMPORTED_LOCATION
+  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfastrtps.so
+)
+
+add_library(libfoonathan_memory-0.7.3 STATIC IMPORTED)
+set_target_properties(libfoonathan_memory-0.7.3 PROPERTIES
+  IMPORTED_LOCATION
+  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfoonathan_memory-0.7.3.a
+)
+
+target_link_libraries(booster_robotics_sdk INTERFACE libfastcdr libfastrtps libfoonathan_memory-0.7.3)
+
+target_include_directories(booster_robotics_sdk PUBLIC INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/include
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/third_party/include
+)
 
 add_executable(b1_loco_example_client example/high_level/b1_loco_example_client.cpp)
-add_executable(b1_arm_sdk_example_client example/high_level/b1_arm_sdk_example.cpp)
-add_executable(b1_7dof_arm_sdk_example_client example/high_level/b1_7dof_arm_sdk_example.cpp)
-add_executable(b1_low_level_publisher example/low_level/low_level_publisher.cpp)
-add_executable(b1_low_level_subscriber example/low_level/low_level_subscriber.cpp)
-add_executable(low_level_hand_data_subscriber example/low_level/low_level_hand_data_subscriber.cpp)
-add_executable(b1_low_sdk_example example/low_level/b1_low_sdk_example.cpp)
-add_executable(b1_7dof_arm_low_sdk_example example/low_level/b1_7dof_arm_low_sdk_example.cpp)
-add_executable(odometer_example example/low_level/odometer_example.cpp)
+target_link_libraries(b1_loco_example_client booster_robotics_sdk)
 
-
-include_directories(BEFORE $(PROJECT_SOURCE_DIR)/include)
+# add_executable(b1_arm_sdk_example_client example/high_level/b1_arm_sdk_example.cpp)
+# add_executable(b1_7dof_arm_sdk_example_client example/high_level/b1_7dof_arm_sdk_example.cpp)
+# add_executable(b1_low_level_publisher example/low_level/low_level_publisher.cpp)
+# add_executable(b1_low_level_subscriber example/low_level/low_level_subscriber.cpp)
+# add_executable(low_level_hand_data_subscriber example/low_level/low_level_hand_data_subscriber.cpp)
+# add_executable(b1_low_sdk_example example/low_level/b1_low_sdk_example.cpp)
+# add_executable(b1_7dof_arm_low_sdk_example example/low_level/b1_7dof_arm_low_sdk_example.cpp)
+# add_executable(odometer_example example/low_level/odometer_example.cpp)
+# include_directories(BEFORE $(PROJECT_SOURCE_DIR)/include)
 
 if(BUILD_PYTHON_BINDING)
     find_package(Python3 REQUIRED COMPONENTS Interpreter Development.Module)
