@@ -14,8 +14,8 @@ set(CMAKE_CXX_STANDARD 17)
 # Booster libraries that should be linked
 set(BOOSTER_LIBRARIES
     ${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libbooster_robotics_sdk.a
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfastcdr.so
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfastrtps.so
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfastcdr.so.2
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfastrtps.so.2.13
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfoonathan_memory-0.7.3.a
     PARENT_SCOPE
 )
