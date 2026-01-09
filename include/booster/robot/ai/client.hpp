@@ -1,5 +1,4 @@
-#ifndef __BOOSTER_ROBOTICS_SDK_B1_LOCO_CLIENT_HPP__
-#define __BOOSTER_ROBOTICS_SDK_B1_LOCO_CLIENT_HPP__
+#pragma once
 
 #include <memory>
 
@@ -73,9 +72,9 @@ public:
      *
      * @return 0 if success, otherwise return error code
      */
-    int32_t Speek(const SpeekParameter &param) {
+    int32_t Speak(const SpeakParameter &param) {
         std::string body = param.ToJson().dump();
-        return SendApiRequest(AiApiId::kSpeek, body);
+        return SendApiRequest(AiApiId::kSpeak, body);
     }
 
     /**
@@ -84,10 +83,10 @@ public:
      * @return 0 if success, otherwise return error code
      */
     int32_t StartFaceTracking() {
-        return SendApiRequest(AiApiId::kStartFaceTracking, "");   
+        return SendApiRequest(AiApiId::kStartFaceTracking, "");
     }
 
-     /**
+    /**
      * @brief Start face tracking
      *
      * @return 0 if success, otherwise return error code
@@ -102,5 +101,3 @@ private:
 
 }
 } // namespace booster::robot
-
-#endif // __BOOSTER_ROBOTICS_SDK_B1_LOCO_CLIENT_HPP__

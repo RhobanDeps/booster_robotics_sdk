@@ -42,6 +42,11 @@ enum class LocoApiId {
     kStopHandEndEffector = 2023,
     kShoot = 2024,
     kGetUpWithMode = 2025,
+    kZeroTorqueDrag = 2026,
+    kRecordTrajectory = 2027,
+    kReplayTrajectory = 2028,
+    kWholeBodyDance = 2029,
+    kUpperBodyCustomControl = 2030,
 };
 
 class RotateHeadParameter {
@@ -563,9 +568,10 @@ class ControlDexterousHandParameter {
 public:
     ControlDexterousHandParameter() = default;
     ControlDexterousHandParameter(
-        const std::vector<DexterousFingerParameter> &finger_params, HandIndex hand_index) :
+        const std::vector<DexterousFingerParameter> &finger_params, HandIndex hand_index, BoosterHandType hand_type = BoosterHandType::kInspireHand) :
         finger_params_(finger_params),
-        hand_index_(hand_index) {
+        hand_index_(hand_index),
+        hand_type_(hand_type) {
     }
 
     void FromJson(nlohmann::json &json) {
@@ -575,6 +581,7 @@ public:
             finger_params_.push_back(param);
         }
         hand_index_ = static_cast<HandIndex>(json["hand_index"]);
+        hand_type_ = static_cast<BoosterHandType>(json["hand_type"]);
     }
 
     nlohmann::json ToJson() const {
@@ -583,12 +590,14 @@ public:
             json["finger_params"].push_back(finger_param.ToJson());
         }
         json["hand_index"] = static_cast<int>(hand_index_);
+        json["hand_type"] = static_cast<int>(hand_type_);
         return json;
     }
 
 public:
     std::vector<DexterousFingerParameter> finger_params_;
     HandIndex hand_index_;
+    BoosterHandType hand_type_;
 };
 
 enum class DanceId {
@@ -647,6 +656,122 @@ public:
 
 private:
     std::string sound_file_path_;
+};
+
+class ReplayTrajectoryParameter {
+public:
+    ReplayTrajectoryParameter() = default;
+    ReplayTrajectoryParameter(const std::string &traj_file_path) :
+        traj_file_path_(traj_file_path) {
+    }
+
+    void FromJson(nlohmann::json &json) {
+        traj_file_path_ = json["traj_file_path"];
+    }
+
+    nlohmann::json ToJson() const {
+        nlohmann::json json;
+        json["traj_file_path"] = traj_file_path_;
+        return json;
+    }
+
+private:
+    std::string traj_file_path_;
+};
+
+class ZeroTorqueDragParameter {
+public:
+    ZeroTorqueDragParameter() = default;
+    ZeroTorqueDragParameter(bool enable) :
+        enable_(enable) {
+    }
+
+    void FromJson(nlohmann::json &json) {
+        enable_ = json["enable"];
+    }
+
+    nlohmann::json ToJson() const {
+        nlohmann::json json;
+        json["enable"] = enable_;
+        return json;
+    }
+
+private:
+    bool enable_ = false;
+};
+
+class RecordTrajectoryParameter {
+public:
+    RecordTrajectoryParameter() = default;
+    RecordTrajectoryParameter(bool enable) :
+        enable_(enable) {
+    }
+
+    void FromJson(nlohmann::json &json) {
+        enable_ = json["enable"];
+    }
+
+    nlohmann::json ToJson() const {
+        nlohmann::json json;
+        json["enable"] = enable_;
+        return json;
+    }
+
+private:
+    bool enable_ = false;
+};
+
+enum class WholeBodyDanceId {
+    kArbicDance = 0,
+    kMichaelDance1 = 1,
+    kMichaelDance2 = 2,
+    kMichaelDance3 = 3,
+    kMoonWalk = 4,
+    kBoxingStyleKick = 5,
+    kRoundhouseKick = 6,
+};
+
+class WholeBodyDanceParameter {
+public:
+    WholeBodyDanceParameter() = default;
+    WholeBodyDanceParameter(WholeBodyDanceId dance_id) :
+        dance_id_(dance_id) {
+    }
+
+public:
+    void FromJson(nlohmann::json &json) {
+        dance_id_ = json["dance_id"];
+    }
+
+    nlohmann::json ToJson() const {
+        nlohmann::json json;
+        json["dance_id"] = dance_id_;
+        return json;
+    }
+
+public:
+    WholeBodyDanceId dance_id_;
+};
+
+class UpperBodyCustomControlParameter {
+public:
+    UpperBodyCustomControlParameter() = default;
+    UpperBodyCustomControlParameter(bool start) :
+        start_(start) {
+    }
+
+    void FromJson(nlohmann::json &json) {
+        start_ = json["start"];
+    }
+
+    nlohmann::json ToJson() const {
+        nlohmann::json json;
+        json["start"] = start_;
+        return json;
+    }
+
+public:
+    bool start_;
 };
 
 }
