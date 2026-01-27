@@ -39,11 +39,11 @@ set(BOOSTER_INCLUDES
 # add_executable(odometer_example example/low_level/odometer_example.cpp)
 # include_directories(BEFORE $(PROJECT_SOURCE_DIR)/include)
 
-target_link_libraries(b1_low_level_publisher PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libbooster_robotics_sdk.a
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfastcdr.so.2
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfastrtps.so.2.13
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfoonathan_memory-0.7.3.a)
-target_include_directories(b1_low_level_publisher PUBLIC ${BOOSTER_INCLUDES})
+# target_link_libraries(b1_low_level_publisher PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libbooster_robotics_sdk.a
+#     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfastcdr.so.2
+#     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfastrtps.so.2.13
+#     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}/libfoonathan_memory-0.7.3.a)
+# target_include_directories(b1_low_level_publisher PUBLIC ${BOOSTER_INCLUDES})
 
 if(BUILD_PYTHON_BINDING)
     find_package(Python3 REQUIRED COMPONENTS Interpreter Development.Module)
